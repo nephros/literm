@@ -415,12 +415,10 @@ void TextRender::paintFromBuffer(const TerminalBuffer& buffer, int from, int to,
     const int leftmargin = 2;
     int cutAfter = property("cutAfter").toInt() + iFontDescent;
 
-    TermChar tmp = m_terminal.zeroChar;
-    TermChar nextAttrib = m_terminal.zeroChar;
-    TermChar currAttrib = m_terminal.zeroChar;
-    qreal currentX = leftmargin;
-
-    for (int i = from; i < to; i++, yDelegateIndex++) {
+    TermChar nextAttrib = sTerm->zeroChar();
+    TermChar currAttrib = sTerm->zeroChar();
+    int currentX = leftmargin;
+    for(int i=from; i<to; i++) {
         y += iFontHeight;
 
         // ### if the background containers also had a container per row, we
@@ -434,8 +432,9 @@ void TextRender::paintFromBuffer(const TerminalBuffer& buffer, int from, int to,
 
         // background for the current line
         currentX = leftmargin;
-        qreal fragWidth = 0;
-        for (int j = 0; j < xcount; j++) {
+        int fragWidth = 0;
+        for(int j=0; j<xcount; j++) {
+            TermChar tmp = buffer[i][j];
             fragWidth += iFontWidth;
             if (j == 0) {
                 tmp = lineBuffer.at(j);
@@ -460,8 +459,8 @@ void TextRender::paintFromBuffer(const TerminalBuffer& buffer, int from, int to,
         // text for the current line
         QString line;
         currentX = leftmargin;
-        for (int j = 0; j < xcount; j++) {
-            tmp = lineBuffer.at(j);
+        for (int j=0; j<xcount; j++) {
+            TermChar tmp = buffer[i][j];
             line += tmp.c;
             if (j == 0) {
                 currAttrib = tmp;

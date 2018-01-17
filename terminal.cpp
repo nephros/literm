@@ -79,11 +79,6 @@ Terminal::Terminal(QObject* parent)
     , iBackBufferScrollPos(0)
     , m_dispatch_timer(0)
 {
-    zeroChar.c = ' ';
-    zeroChar.bgColor = Parser::fetchDefaultBgColor();
-    zeroChar.fgColor = Parser::fetchDefaultFgColor();
-    zeroChar.attrib = TermChar::NoAttributes;
-
     escape = -1;
 
     iTermAttribs.currentFgColor = Parser::fetchDefaultFgColor();
@@ -129,6 +124,18 @@ void Terminal::timerEvent(QTimerEvent*)
     killTimer(m_dispatch_timer);
     m_dispatch_timer = 0;
     insertInBuffer(m_pty->takeData());
+}
+
+TermChar Terminal::zeroChar() const
+{
+    TermChar ch;
+
+    ch.c = ' ';
+    ch.bgColor = iTermAttribs.currentBgColor;
+    ch.fgColor = iTermAttribs.currentFgColor;
+    ch.attrib = iTermAttribs.currentAttrib;
+
+    return ch;
 }
 
 void Terminal::setCursorPos(QPoint pos)
@@ -561,12 +568,11 @@ void Terminal::insertAtCursor(QChar c, bool overwriteMode, bool advanceCursor)
         }
     }
 
-    auto& line = currentLine();
-    while (line.size() < cursorPos().x())
-        line.append(zeroChar);
+    while(currentLine().size() < cursorPos().x() )
+        currentLine().append(zeroChar());
 
-    if (!overwriteMode)
-        line.insert(cursorPos().x() - 1, zeroChar);
+    if(!overwriteMode)
+        currentLine().insert(cursorPos().x()-1,zeroChar());
 
     line[cursorPos().x() - 1].c = c;
     line[cursorPos().x() - 1].fgColor = iTermAttribs.currentFgColor;
@@ -576,6 +582,30 @@ void Terminal::insertAtCursor(QChar c, bool overwriteMode, bool advanceCursor)
     if (advanceCursor) {
         setCursorPos(QPoint(cursorPos().x() + 1, cursorPos().y()));
     }
+}
+
+void Terminal::deleteAt(QPoint pos)
+{
+    clearAt(pos);
+    buffer()[pos.y()-1].removeAt(pos.x()-1);
+}
+
+void Terminal::clearAt(QPoint pos)
+{
+    if(pos.y() <= 0 || pos.y()-1 > buffer().size() ||
+            pos.x() <= 0 || pos.x()-1 > buffer()[pos.y()-1].size())
+    {
+        qDebug() << "warning: trying to clear char out of bounds";
+        return;
+    }
+
+    // just in case...
+    while(buffer().size() < pos.y())
+        buffer().append(QList<TermChar>());
+    while(buffer()[pos.y()-1].size() < pos.x() )
+        buffer()[pos.y()-1].append(zeroChar());
+
+    buffer()[pos.y()-1][pos.x()-1] = zeroChar();
 }
 
 void Terminal::eraseLineAtCursor(int from, int to)
@@ -595,9 +625,8 @@ void Terminal::eraseLineAtCursor(int from, int to)
     if (from > to)
         return;
 
-    for (int i = from; i <= to; i++) {
-        currentLine()[i] = zeroChar;
-    }
+    for(int i=from; i<=to; i++)
+        currentLine()[i] = zeroChar();
 }
 
 void Terminal::clearAll(bool wholeBuffer)
@@ -845,7 +874,16 @@ void Terminal::ansiSequence(const QString& seq)
         unhandled = handleDCH(params, extra);
         break;
     case '@': // insert blank characters
-        unhandled = handleICH(params, extra);
+        if(!extra.isEmpty()) {
+            unhandled=true;
+            break;
+        }
+        if(params.count()<1)
+            params.append(1);
+        if(params.at(0)==0)
+            params[0] = 1;
+        for(int i=1; i<=params.at(0); i++)
+            insertAtCursor(' ', false, false);
         break;
 
     case 'S': // scroll up n lines
@@ -1314,9 +1352,9 @@ void Terminal::escControlChar(const QString& seq)
         if (seq.at(0) == '#' && seq.at(1) == '8') { // test mode, fill screen with 'E'
             clearAll(true);
             for (int i = 0; i < rows(); i++) {
-                TerminalLine line;
-                for (int j = 0; j < columns(); j++) {
-                    TermChar c = zeroChar;
+                QList<TermChar> line;
+                for(int j = 0; j < columns(); j++) {
+                    TermChar c = zeroChar();
                     c.c = 'E';
                     line.append(c);
                 }

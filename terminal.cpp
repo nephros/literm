@@ -238,6 +238,12 @@ void Terminal::keyPress(int key, int modifiers, const QString& text)
 {
     QString toWrite;
 
+    resetBackBufferScrollPos();
+
+    // physical sticky shift generates key=0, mod=Qt::ShiftModifier, sticky alt: key=0, mod=0
+    if (key == 0 && (modifiers == Qt::ShiftModifier || modifiers == Qt::NoModifier))
+        return;
+
     if (key > 0xFFFF) {
         int modcode = (modifiers & Qt::ShiftModifier ? 1 : 0) | (modifiers & Qt::AltModifier ? 2 : 0) | (modifiers & MyControlModifier ? 4 : 0);
 

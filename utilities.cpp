@@ -211,17 +211,6 @@ void Util::keyPressFeedback()
 #endif
 }
 
-void Util::keyReleaseFeedback()
-{
-    if (!settingsValue("ui/keyPressFeedback", true).toBool())
-        return;
-
-        // TODO: check what's more comfortable, only press, or press and release
-#ifdef HAVE_FEEDBACK
-    QFeedbackEffect::playThemeEffect(QFeedbackEffect::ReleaseWeak);
-#endif
-}
-
 bool Util::visualBellEnabled() const
 {
     return settingsValue("general/visualBell", true).toBool();

@@ -116,7 +116,6 @@ public:
     void setFontSize(int size);
 
     Q_INVOKABLE void keyPressFeedback();
-    Q_INVOKABLE void keyReleaseFeedback();
     Q_INVOKABLE void notifyText(QString text);
     Q_INVOKABLE void fakeKeyPress(int key, int modifiers);
 

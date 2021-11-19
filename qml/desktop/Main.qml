@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2021 Crimson AS <info@crimson.no>
  * Copyright (C) 2017 Robin Burchell <robin+git@viroteck.net>
  * Copyright 2011-2012 Heikki Holstila <heikki.holstila@gmail.com>
  *
@@ -60,7 +59,7 @@ Rectangle {
     property int fontSizeSmall: 14*pixelRatio
     property int fontSizeLarge: 24*pixelRatio
 
-    property int uiFontSize: Util.uiFontSize * pixelRatio
+    property int uiFontSize: util.uiFontSize * pixelRatio
 
     property int scrollBarWidth: 6*window.pixelRatio
 
@@ -79,20 +78,20 @@ Rectangle {
                 focus: true
 
                 onPanLeft: {
-                    Util.notifyText(Util.panLeftTitle)
-                    textrender.putString(Util.panLeftCommand)
+                    util.notifyText(util.panLeftTitle)
+                    textrender.putString(util.panLeftCommand)
                 }
                 onPanRight: {
-                    Util.notifyText(Util.panRightTitle)
-                    textrender.putString(Util.panRightCommand)
+                    util.notifyText(util.panRightTitle)
+                    textrender.putString(util.panRightCommand)
                 }
                 onPanUp: {
-                    Util.notifyText(Util.panUpTitle)
-                    textrender.putString(Util.panUpCommand)
+                    util.notifyText(util.panUpTitle)
+                    textrender.putString(util.panUpCommand)
                 }
                 onPanDown: {
-                    Util.notifyText(Util.panDownTitle)
-                    textrender.putString(Util.panDownCommand)
+                    util.notifyText(util.panDownTitle)
+                    textrender.putString(util.panDownCommand)
                 }
 
                 onDisplayBufferChanged: {
@@ -100,11 +99,11 @@ Rectangle {
                     textrender.y = 0;
                 }
                 onTitleChanged: {
-                    Util.windowTitle = title
+                    util.windowTitle = title
                 }
-                dragMode: Util.dragMode
+                dragMode: util.dragMode
                 onVisualBell: {
-                    if (Util.visualBellEnabled)
+                    if (util.visualBellEnabled)
                         bellTimer.start()
                 }
                 contentItem: Item {
@@ -174,29 +173,29 @@ Rectangle {
                         loops: Animation.Infinite
                         PauseAnimation {
                             id: startPauseAnim
-                            duration: Util.cursorAnimationStartPauseDuration
+                            duration: util.cursorAnimationStartPauseDuration
                         }
                         NumberAnimation {
                             id: fadeInAnim
                             target: cursor
                             property: "opacity"
                             to: 0.8
-                            duration: Util.cursorAnimationFadeInDuration
+                            duration: util.cursorAnimationFadeInDuration
                         }
                         PauseAnimation {
                             id: middlePauseAnim
-                            duration: Util.cursorAnimationMiddlePauseDuration
+                            duration: util.cursorAnimationMiddlePauseDuration
                         }
                         NumberAnimation {
                             id: fadeOutAnim
                             target: cursor
                             property: "opacity"
                             to: 0.5
-                            duration: Util.cursorAnimationFadeOutDuration
+                            duration: util.cursorAnimationFadeOutDuration
                         }
                         PauseAnimation {
                             id: endPauseAnim
-                            duration: Util.cursorAnimationEndPauseDuration
+                            duration: util.cursorAnimationEndPauseDuration
                         }
                     }
                 }
@@ -222,8 +221,8 @@ Rectangle {
                 property int cutAfter: height
 
                 anchors.fill: parent
-                font.family: Util.fontFamily
-                font.pointSize: Util.fontSize
+                font.family: util.fontFamily
+                font.pointSize: util.fontSize
                 allowGestures: !menu.showing && !urlWindow.show && !aboutDialog.show && !layoutWindow.show
 
                 onCutAfterChanged: {
@@ -394,7 +393,7 @@ Rectangle {
     }
 
     Connections {
-        target: Util
+        target: util
         onNotify: {
             textNotify.text = msg;
             textNotifyAnim.enabled = false;
@@ -448,11 +447,11 @@ Rectangle {
         id: aboutDialog
 
         text: {
-            var str = "<font size=\"+3\">literm " + Util.versionString() + "</font><br>\n" +
+            var str = "<font size=\"+3\">literm " + util.versionString() + "</font><br>\n" +
                     "<font size=\"+1\">" +
                     "Source code:<br>\n<a href=\"https://github.com/rburchell/literm/\">https://github.com/rburchell/literm/</a>\n\n"
                     "Config files for adjusting settings are at:<br>\n" +
-                    Util.configPath() + "/<br><br>\n"
+                    util.configPath() + "/<br><br>\n"
             str += "</font>";
             return str;
         }
@@ -471,8 +470,8 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        if (Util.startupErrorMessage != "") {
-            showErrorMessage(Util.startupErrorMessage)
+        if (startupErrorMessage != "") {
+            showErrorMessage(startupErrorMessage)
         }
     }
 

@@ -16,7 +16,6 @@
 */
 
 import QtQuick 2.0
-import literm 1.0
 
 PopupWindow {
     id: layoutWindow
@@ -26,7 +25,7 @@ PopupWindow {
     Component {
         id: listDelegate
         Rectangle {
-            color: Util.keyboardLayout === modelData ? "#909090" : "#404040"
+            color: util.keyboardLayout === modelData ? "#909090" : "#404040"
             width: parent.width
             height: selectButton.height+4*window.pixelRatio
             border.width: 1
@@ -51,9 +50,9 @@ PopupWindow {
                 width: 70*window.pixelRatio
                 anchors.rightMargin: window.paddingSmall
                 onClicked: {
-                    Util.keyboardLayout = modelData
+                    util.keyboardLayout = modelData
                     layoutWindow.show = false
-                    Util.notifyText(modelData)
+                    util.notifyText(modelData)
                 }
             }
         }

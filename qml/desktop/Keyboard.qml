@@ -16,7 +16,6 @@
 */
 
 import QtQuick 2.0
-import literm 1.0
 
 Item {
     id: keyboard
@@ -33,9 +32,9 @@ Item {
 
     property bool active
 
-    property int outmargins: Util.keyboardMargins
+    property int outmargins: util.keyboardMargins
     property int keyspacing: 6
-    property int keysPerRow: KeyLoader.vkbColumns()
+    property int keysPerRow: keyLoader.vkbColumns()
     property real keywidth: (keyboard.width - keyspacing*keysPerRow - outmargins*2)/keysPerRow;
 
     width: parent.width
@@ -53,16 +52,16 @@ Item {
             Repeater {
                 id: rowRepeater
 
-                model: KeyLoader.vkbRows()
+                model: keyLoader.vkbRows()
                 delegate: Row {
                     spacing: keyboard.keyspacing
                     Repeater {
                         id: colRepeater
 
                         property int rowIndex: index
-                        model: KeyLoader.vkbColumns()
+                        model: keyLoader.vkbColumns()
                         delegate: Key {
-                            property var keydata: KeyLoader.keyAt(colRepeater.rowIndex, index)
+                            property var keydata: keyLoader.keyAt(colRepeater.rowIndex, index)
                             label: keydata[0]
                             code: keydata[1]
                             label_alt: keydata[2]
@@ -99,13 +98,13 @@ Item {
     }
 
     Connections {
-        target: Util
+        target: util
         onKeyboardLayoutChanged: {
-            var ret = KeyLoader.loadLayout(Util.keyboardLayout)
+            var ret = keyLoader.loadLayout(util.keyboardLayout)
             if (!ret) {
                 showErrorMessage("There was an error loading the keyboard layout.<br>\nUsing the default one instead.");
-                Util.keyboardLayout = "english"
-                ret = KeyLoader.loadLayout(":/data/english.layout"); //try the default as a fallback (load from resources to ensure it will succeed)
+                util.keyboardLayout = "english"
+                ret = keyLoader.loadLayout(":/data/english.layout"); //try the default as a fallback (load from resources to ensure it will succeed)
                 if (!ret) {
                     console.log("keyboard layout fail");
                     Qt.quit();

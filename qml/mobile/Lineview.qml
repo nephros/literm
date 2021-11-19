@@ -22,11 +22,11 @@ Rectangle {
     id: lineView
 
     property var lines: [""]
-    property int fontPointSize: Util.fontSize
+    property int fontPointSize: util.fontSize
     property int cursorX: 1
     property int cursorWidth: 10
     property int cursorHeight: 10
-    property int extraLines: Util.extraLinesFromCursor
+    property int extraLines: util.extraLinesFromCursor
 
     color: "#404040"
     border.width: 2
@@ -40,7 +40,7 @@ Rectangle {
         id: fontHeightHack
         visible: false
         text: "X"
-        font.family: Util.fontFamily
+        font.family: util.fontFamily
         font.pointSize: lineView.fontPointSize
     }
 
@@ -70,7 +70,7 @@ Rectangle {
                 width: lineTextCol.width
                 Text {
                     color: "#ffffff"
-                    font.family: Util.fontFamily
+                    font.family: util.fontFamily
                     font.pointSize: lineView.fontPointSize
                     text: modelData
                     textFormat: Text.PlainText

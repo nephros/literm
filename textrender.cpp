@@ -215,7 +215,11 @@ void TextRender::setFont(const QFont& font)
 
     // Font should be consistent in spacing with all characters,
     // otherwise it's all going to break horribly.
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
     iFontWidth = fontMetrics.horizontalAdvance(' ');
+#else
+    iFontWidth = fontMetrics.width(' ');
+#endif
 
     iFontDescent = fontMetrics.descent();
 

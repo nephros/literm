@@ -93,7 +93,11 @@ bool KeyLoader::loadLayoutInternal(QIODevice& from)
             line.replace("\\x5D", "]");
             line.replace("\\x5C", "\\");
 
+#if QT_VERSION <= QT_VERSION_CHECK(5, 7, 0)
+            QStringList parts = line.split(",", QString::KeepEmptyParts);
+#else
             QStringList parts = line.split(",", Qt::KeepEmptyParts);
+#endif
             if (parts.count() >= 2) {
                 bool ok = true;
                 key.label = parts.at(0);

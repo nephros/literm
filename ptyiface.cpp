@@ -122,7 +122,12 @@ PtyIFace::PtyIFace(Terminal* term, const QString& charset, const QByteArray& ter
             execCmd.append(" --login");
         }
 
+#if QT_VERSION <= QT_VERSION_CHECK(5, 7, 0)
+        QStringList execParts = execCmd.split(' ', QString::SkipEmptyParts);
+#else
         QStringList execParts = execCmd.split(' ', Qt::SkipEmptyParts);
+#endif
+
         if (execParts.length() == 0)
             exit(0);
         char* ptrs[execParts.length() + 1];

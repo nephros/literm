@@ -1,5 +1,4 @@
 /*
-    Copyright 2021 Crimson AS <info@crimson.no>
     Copyright 2011-2012 Heikki Holstila <heikki.holstila@gmail.com>
 
     This work is free software: you can redistribute it and/or modify
@@ -60,7 +59,6 @@ class Util : public QObject
     Q_PROPERTY(QString panDownCommand READ panDownCommand CONSTANT)
     Q_PROPERTY(QString panUpTitle READ panUpTitle CONSTANT)
     Q_PROPERTY(QString panUpCommand READ panUpCommand CONSTANT)
-    Q_PROPERTY(QString startupErrorMessage READ startupErrorMessage CONSTANT)
 
     Q_ENUMS(KeyboardMode)
     Q_ENUMS(DragMode)
@@ -93,9 +91,6 @@ public:
     QString panDownCommand() const;
     QString panUpTitle() const;
     QString panUpCommand() const;
-
-    QString startupErrorMessage() const;
-    void setStartupErrorMessage(const QString&);
 
     QByteArray terminalEmulator() const;
     QString terminalCommand() const;
@@ -172,7 +167,6 @@ private:
 
     QSettings m_settings;
     QQuickView* iWindow;
-    QString m_startupErrorMessage;
 };
 
 #endif // UTIL_H

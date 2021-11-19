@@ -26,7 +26,7 @@ Item {
     height: 960
 
     Binding {
-        target: Util
+        target: util
         property: "windowOrientation"
         value: page.orientation
     }
@@ -35,8 +35,8 @@ Item {
         id: page
 
         property int orientation: forceOrientation ? forcedOrientation : Screen.orientation
-        property bool forceOrientation: Util.orientationMode != Util.OrientationAuto
-        property int forcedOrientation: Util.orientationMode == Util.OrientationLandscape ? Qt.LandscapeOrientation
+        property bool forceOrientation: util.orientationMode != Util.OrientationAuto
+        property int forcedOrientation: util.orientationMode == Util.OrientationLandscape ? Qt.LandscapeOrientation
                                                                                           : Qt.PortraitOrientation
         property bool portrait: rotation % 180 == 0
 
@@ -76,7 +76,7 @@ Item {
             property int fontSizeSmall: 14*pixelRatio
             property int fontSizeLarge: 24*pixelRatio
 
-            property int uiFontSize: Util.uiFontSize * pixelRatio
+            property int uiFontSize: util.uiFontSize * pixelRatio
 
             property int scrollBarWidth: 6*window.pixelRatio
 
@@ -91,35 +91,35 @@ Item {
                     Qt.quit()
                 }
                 onPanLeft: {
-                    Util.notifyText(Util.panLeftTitle)
-                    textrender.putString(Util.panLeftCommand)
+                    util.notifyText(util.panLeftTitle)
+                    textrender.putString(util.panLeftCommand)
                 }
                 onPanRight: {
-                    Util.notifyText(Util.panRightTitle)
-                    textrender.putString(Util.panRightCommand)
+                    util.notifyText(util.panRightTitle)
+                    textrender.putString(util.panRightCommand)
                 }
                 onPanUp: {
-                    Util.notifyText(Util.panUpTitle)
-                    textrender.putString(Util.panUpCommand)
+                    util.notifyText(util.panUpTitle)
+                    textrender.putString(util.panUpCommand)
                 }
                 onPanDown: {
-                    Util.notifyText(Util.panDownTitle)
-                    textrender.putString(Util.panDownCommand)
+                    util.notifyText(util.panDownTitle)
+                    textrender.putString(util.panDownCommand)
                 }
 
                 onDisplayBufferChanged: window.displayBufferChanged()
                 onTitleChanged: {
-                    Util.windowTitle = title
+                    util.windowTitle = title
                 }
-                dragMode: Util.dragMode
+                dragMode: util.dragMode
                 onVisualBell: {
-                    if (Util.visualBellEnabled)
+                    if (util.visualBellEnabled)
                         bellTimer.start()
                 }
                 contentItem: Item {
                     width: parent.width
                     height: parent.height
-                    opacity: (Util.keyboardMode == Util.KeyboardFade && vkb.active) ? 0.3
+                    opacity: (util.keyboardMode == Util.KeyboardFade && vkb.active) ? 0.3
                                                                                     : 1.0
 
                     Behavior on opacity {
@@ -203,8 +203,8 @@ Item {
 
                 height: parent.height
                 width: parent.width
-                font.family: Util.fontFamily
-                font.pointSize: Util.fontSize
+                font.family: util.fontFamily
+                font.pointSize: util.fontSize
                 allowGestures: !vkb.active
 
                 onCutAfterChanged: {
@@ -215,7 +215,7 @@ Item {
 
                 Lineview {
                     id: lineView
-                    opacity: ((Util.keyboardMode == Util.KeyboardFade) && vkb.active) ? 0.8
+                    opacity: ((util.keyboardMode == Util.KeyboardFade) && vkb.active) ? 0.8
                                                                                       : 0.0
                     cursorWidth: textrender.cellSize.width
                     cursorHeight: textrender.cellSize.height
@@ -225,8 +225,8 @@ Item {
                     id: vkb
 
                     property bool active
-                    property bool keyboardEnabled: (Util.keyboardMode == Util.KeyboardMove)
-                                                    || (Util.keyboardMode == Util.KeyboardFade)
+                    property bool keyboardEnabled: (util.keyboardMode == Util.KeyboardMove)
+                                                    || (util.keyboardMode == Util.KeyboardFade)
 
                     y: parent.height - vkb.height
                     visible: keyboardEnabled
@@ -282,7 +282,7 @@ Item {
                                 //   - not in select mode, as it would be hard to select text
                                 if (touchPoint.y < vkb.y && touchPoint.startY < vkb.y &&
                                         Math.abs(touchPoint.y - touchPoint.startY) < 20 &&
-                                        Util.dragMode !== Util.DragSelect) {
+                                        util.dragMode !== Util.DragSelect) {
                                     if (vkb.active) {
                                         window.sleepVKB()
                                     } else {
@@ -333,7 +333,7 @@ Item {
             Timer {
                 id: fadeTimer
 
-                interval: Util.keyboardFadeOutDelay
+                interval: util.keyboardFadeOutDelay
                 onTriggered: {
                     window.sleepVKB();
                 }
@@ -346,7 +346,7 @@ Item {
             }
 
             Connections {
-                target: Util
+                target: util
                 onNotify: {
                     textNotify.text = msg;
                     textNotifyAnim.enabled = false;
@@ -398,17 +398,17 @@ Item {
                 id: aboutDialog
 
                 text: {
-                    var str = "<font size=\"+3\">literm " + Util.versionString() + "</font><br>\n" +
+                    var str = "<font size=\"+3\">literm " + util.versionString() + "</font><br>\n" +
                             "<font size=\"+1\">" +
                             "Source code:<br>\n<a href=\"https://github.com/rburchell/literm/\">https://github.com/rburchell/literm/</a>\n\n"
                             "Config files for adjusting settings are at:<br>\n" +
-                            Util.configPath() + "/<br><br>\n"
+                            util.configPath() + "/<br><br>\n"
                     if (textrender.terminalSize.width != 0 && textrender.terminalSize.height != 0) {
-                        str += "<br><br>Current window title: <font color=\"gray\">" + Util.windowTitle.substring(0,40) + "</font>"; //cut long window title
-                        if(Util.windowTitle.length>40)
+                        str += "<br><br>Current window title: <font color=\"gray\">" + util.windowTitle.substring(0,40) + "</font>"; //cut long window title
+                        if(util.windowTitle.length>40)
                             str += "...";
                         str += "<br>Current terminal size: <font color=\"gray\">" + textrender.terminalSize.width + "×" + textrender.terminalSize.height+ "</font>";
-                        str += "<br>Charset: <font color=\"gray\">" + Util.charset + "</font>";
+                        str += "<br>Charset: <font color=\"gray\">" + util.charset + "</font>";
                     }
                     str += "</font>";
                     return str;
@@ -429,7 +429,7 @@ Item {
 
             function vkbKeypress(key,modifiers) {
                 wakeVKB();
-                Util.fakeKeyPress(key,modifiers);
+                util.fakeKeyPress(key,modifiers);
             }
 
             function wakeVKB()
@@ -452,9 +452,9 @@ Item {
 
             function setTextRenderAttributes()
             {
-                if (Util.keyboardMode == Util.KeyboardMove && vkb.active) {
+                if (util.keyboardMode == Util.KeyboardMove && vkb.active) {
                     var move = textrender.cursorPixelPos().y
-                            + textrender.cellSize.height * (Util.extraLinesFromCursor + 0.5)
+                            + textrender.cellSize.height * (util.extraLinesFromCursor + 0.5)
                     if (move < vkb.y) {
                         textrender.contentItem.y = 0
                         textrender.cutAfter = vkb.y
@@ -470,14 +470,14 @@ Item {
 
             function displayBufferChanged()
             {
-                lineView.lines = textrender.printableLinesFromCursor(Util.extraLinesFromCursor);
+                lineView.lines = textrender.printableLinesFromCursor(util.extraLinesFromCursor);
                 lineView.cursorX = textrender.cursorPixelPos().x;
                 setTextRenderAttributes();
             }
 
             Component.onCompleted: {
-                if (Util.startupErrorMessage != "") {
-                    showErrorMessage(Util.startupErrorMessage)
+                if (startupErrorMessage != "") {
+                    showErrorMessage(startupErrorMessage)
                 }
             }
 

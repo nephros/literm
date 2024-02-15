@@ -145,7 +145,7 @@ public:
 
     bool useAltScreenBuffer() const { return iUseAltScreenBuffer; }
 
-    TermChar zeroChar() const;
+    TermChar zeroChar;
 
 signals:
     void cursorPosChanged(QPoint newPos);

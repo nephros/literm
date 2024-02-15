@@ -1341,11 +1341,10 @@ void Terminal::escControlChar(const QString& seq)
         while (iTabStops.size() < cursorPos().y())
             iTabStops.append(QVector<int>());
 
-        QList<int> &tabStopItem = iTabStops[cursorPos().y() - 1];
-        tabStopItem.append(cursorPos().x());
-        std::sort(tabStopItem.begin(), tabStopItem.end());
-    }
-    else if(ch.toLatin1()=='D') {  // cursor down/scroll down one line
+        iTabStops[cursorPos().y() - 1].append(cursorPos().x());
+        auto& row = iTabStops[cursorPos().y() - 1];
+        std::sort(row.begin(), row.end());
+    } else if (ch.toLatin1() == 'D') { // cursor down/scroll down one line
         scrollFwd(1, cursorPos().y());
     } else if (ch.toLatin1() == 'M') { // cursor up/scroll up one line
         scrollBack(1, cursorPos().y());

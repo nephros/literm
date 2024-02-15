@@ -851,19 +851,6 @@ void Terminal::ansiSequence(const QString& seq)
         }
         break;
 
-    case 'Z':
-        if (!extra.isEmpty() || (params.count() > 1)) {
-            unhandled = true;
-            break;
-        }
-        if (params.count() == 0) {
-            params.append(1);
-        }
-        for (int i = 0; i < params.at(0); i++) {
-            backwardTab();
-        }
-        break;
-
     case 'L': // insert lines
         unhandled = handleIL(params, extra);
         break;

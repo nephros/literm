@@ -805,10 +805,6 @@ void Terminal::ansiSequence(const QString& seq)
     case 'K':
         unhandled = handleEL(params, extra);
         break;
-    case 'X':
-        unhandled = handleECH(params, extra);
-        break;
-
     case 'I':
         if (!extra.isEmpty() || (params.count() > 1)) {
             unhandled = true;

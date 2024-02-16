@@ -1,5 +1,5 @@
 Name: literm
-Version: 1.3.2
+Version: 1.3.2.2
 Release: 1
 Summary: A terminal emulator with a custom virtual keyboard
 Group: System/Base

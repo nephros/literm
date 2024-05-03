@@ -203,7 +203,7 @@ void Util::setFontSize(int size)
 
 void Util::keyPressFeedback()
 {
-    if (!settingsValue("ui/keyPressFeedback", false).toBool())
+    if (settingsValue("ui/keyPressFeedback", false).toBool())
         return;
 
 #ifdef HAVE_FEEDBACK

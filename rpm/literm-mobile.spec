@@ -10,7 +10,7 @@ BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5Gui)
 BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(Qt5Quick)
-BuildRequires: pkgconfig(Qt5Feedback)
+#BuildRequires: pkgconfig(Qt5Feedback)
 Requires: qt5-qtdeclarative-import-xmllistmodel
 Requires: qt5-qtdeclarative-import-window2
 Obsoletes: meego-terminal <= 0.2.2
@@ -31,7 +31,7 @@ Provides: meego-terminal > 0.2.2
 
 %build
 sed -i 's,/opt/literm/,/usr/,' literm.pro
-qmake -qt=5 LITERM_TARGET=nemo
+qmake -qt=5 LITERM_TARGET=nemo HAVE_FEEDBACK=false
 # Inject version number from RPM into source
 sed -i -e 's/PROGRAM_VERSION="[^"]*"/PROGRAM_VERSION="%{version}"/g' version.h
 make %{?_smp_mflags}
